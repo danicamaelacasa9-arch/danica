@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>To My Love</title>
+        <link rel="stylesheet" href="other.css">
+    </head>
+    <body>
+        <div class="page">
+            <div>
+                <p class="mini-tag">For the one I adore</p>
+                <h1>HAPPY BIRTHDAY!
+                </h1>
+                <h2>My Baby</h2>
+                    <button type="button" class="next-button" id="open-pin-dialog">
+                        <svg class="button-heart" viewBox="0 0 24 24" aria-hidden="true">
+                            <path d="M12 21s-8-4.8-8-11a4.5 4.5 0 0 1 8-2.8A4.5 4.5 0 0 1 20 10c0 6.2-8 11-8 11z"/>
+                        </svg>
+                        <span>I Want You Here!</span>
+                        <svg class="button-heart" viewBox="0 0 24 24" aria-hidden="true">
+                            <path d="M12 21s-8-4.8-8-11a4.5 4.5 0 0 1 8-2.8A4.5 4.5 0 0 1 20 10c0 6.2-8 11-8 11z"/>
+                        </svg>
+                    </button>
+            </div>
+        </div>
+
+        <dialog class="pin-dialog" id="pin-dialog" aria-labelledby="pin-title">
+            <form class="pin-form" id="pin-form">
+                <button type="button" class="dialog-close" id="close-pin-dialog" aria-label="Close">×</button>
+                <p class="mini-tag">One little secret</p>
+                <h2 id="pin-title">Enter the PIN</h2>
+                <p class="pin-hint">Enter the special code to open your letter.</p>
+                <label class="visually-hidden" for="pin-input">PIN</label>
+                <input
+                    id="pin-input"
+                    name="pin"
+                    type="password"
+                    autocomplete="one-time-code"
+                    inputmode="none"
+                    placeholder="8-digit PIN"
+                    aria-describedby="pin-error"
+                    readonly
+                    required
+                >
+                <div class="pin-keypad" aria-label="PIN number pad">
+                    <button type="button" class="pin-key" data-digit="1">1</button>
+                    <button type="button" class="pin-key" data-digit="2">2</button>
+                    <button type="button" class="pin-key" data-digit="3">3</button>
+                    <button type="button" class="pin-key" data-digit="4">4</button>
+                    <button type="button" class="pin-key" data-digit="5">5</button>
+                    <button type="button" class="pin-key" data-digit="6">6</button>
+                    <button type="button" class="pin-key" data-digit="7">7</button>
+                    <button type="button" class="pin-key" data-digit="8">8</button>
+                    <button type="button" class="pin-key" data-digit="9">9</button>
+                    <button type="button" class="pin-key pin-key-action" data-action="clear">Clear</button>
+                    <button type="button" class="pin-key" data-digit="0">0</button>
+                    <button type="button" class="pin-key pin-key-action" data-action="backspace" aria-label="Delete last digit">⌫</button>
+                </div>
+                <p class="pin-error" id="pin-error" aria-live="polite"></p>
+                <button class="pin-submit" type="submit">Unlock my letter</button>
+            </form>
+        </dialog>
+
+        <script>
+            const pinDialog = document.querySelector("#pin-dialog");
+            const pinForm = document.querySelector("#pin-form");
+            const pinInput = document.querySelector("#pin-input");
+            const pinError = document.querySelector("#pin-error");
+
+            document.querySelector("#open-pin-dialog").addEventListener("click", () => {
+                pinDialog.showModal();
+                pinInput.focus();
+            });
+
+            document.querySelector("#close-pin-dialog").addEventListener("click", () => {
+                pinDialog.close();
+                pinForm.reset();
+                pinError.textContent = "";
+            });
+
+            document.querySelector(".pin-keypad").addEventListener("click", (event) => {
+                const key = event.target.closest("button");
+                if (!key) return;
+
+                if (key.dataset.digit && pinInput.value.length < 8) {
+                    pinInput.value += key.dataset.digit;
+                    pinError.textContent = "";
+                } else if (key.dataset.action === "clear") {
+                    pinInput.value = "";
+                    pinError.textContent = "";
+                } else if (key.dataset.action === "backspace") {
+                    pinInput.value = pinInput.value.slice(0, -1);
+                    pinError.textContent = "";
+                }
+            });
+
+            pinForm.addEventListener("submit", (event) => {
+                event.preventDefault();
+
+                if (pinInput.value === "06222025") {
+                    window.location.href = "Letter.html";
+                    return;
+                }
+
+                pinError.textContent = "That PIN isn't quite right. Try again!";
+                pinInput.value = "";
+                pinInput.focus();
+            });
+        </script>
+    </body>
+</html>
